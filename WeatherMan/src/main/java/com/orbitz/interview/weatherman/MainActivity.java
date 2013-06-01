@@ -54,7 +54,8 @@ public class MainActivity extends Activity {
         if (zipCode.length() != 5)
         {
             _viewCurrentWeather.setText(""); // clear the previous weather information
-            String message = "Please enter 5-digit zip code.";
+            _imageCurrentWeather.setVisibility(View.INVISIBLE);
+            String message = "Please enter a 5-digit zip-code.";
             showError(message);
             return;
         }
@@ -87,6 +88,7 @@ public class MainActivity extends Activity {
                 currentWeather = weatherService.fetchCurrentWeather(zipCode);
                 return currentWeather;
             } catch (Exception e) {
+                // TODO improve error handling
                 return null;
             }
         }
@@ -111,12 +113,14 @@ public class MainActivity extends Activity {
         protected Drawable doInBackground(String... arguments) {
             String url = arguments[0];
             try {
-                InputStream is = (InputStream) new URL(url).getContent();;
+                InputStream is = (InputStream) new URL(url).getContent();
                 Drawable d = Drawable.createFromStream(is, "src");
                 return d;
             } catch (MalformedURLException e) {
+                // TODO improve error handling
                 return null;
             } catch (IOException e) {
+                // TODO improve error handling
                 return null;
             }
         }
@@ -130,6 +134,7 @@ public class MainActivity extends Activity {
     }
 
     private void displayCurrentWeatherImage(Drawable drawable) {
+        _imageCurrentWeather.setVisibility(View.VISIBLE);
         _imageCurrentWeather.setImageDrawable(drawable);
     }
 }
