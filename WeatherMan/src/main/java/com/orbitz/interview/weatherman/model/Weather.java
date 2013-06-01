@@ -1,5 +1,7 @@
 package com.orbitz.interview.weatherman.model;
 
+import java.util.List;
+
 /**
  * Created by sjain on 5/31/13.
  */
@@ -8,62 +10,73 @@ public class Weather {
     private String _weatherDescription;
     private String _weatherIconUrl;
     private double _precipitation;
+    private List<DailyWeather> _dailyWeathers;
 
-    public Weather(int tempF, String weatherDescription, String weatherIconUrl, double precipitation)
+    public Weather(int tempF, String weatherDescription, String weatherIconUrl, double precipitation, List<DailyWeather> dailyWeathers)
     {
         _tempF = tempF;
         _weatherDescription = weatherDescription;
         _weatherIconUrl = weatherIconUrl;
         _precipitation = precipitation;
+        _dailyWeathers = dailyWeathers;
     }
 
     public int getTempF() {
         return _tempF;
     }
 
-    public void setTempF(int _tempF) {
-        this._tempF = _tempF;
-    }
-
     public String getWeatherDescription() {
         return _weatherDescription;
-    }
-
-    public void setWeatherDescription(String _weatherDescription) {
-        this._weatherDescription = _weatherDescription;
     }
 
     public String getWeatherIconUrl() {
         return _weatherIconUrl;
     }
 
-    public void setWeatherIconUrl(String _weatherIconUrl) {
-        this._weatherIconUrl = _weatherIconUrl;
-    }
-
     public double getPrecipitation() {
         return _precipitation;
     }
 
-    public void setPrecipitation(double _precipitation) {
-        this._precipitation = _precipitation;
+    public List<DailyWeather> getDailyWeathers() {
+        return _dailyWeathers;
     }
 
     public String toDebugString() {
         StringBuffer buffer = new StringBuffer(100);
-        buffer.append("Temperature(F): ");
+        buffer.append("Current:");
+        buffer.append("\n");
         buffer.append(this.getTempF());
-        buffer.append("\n");
-        buffer.append("Description: ");
+        buffer.append("F");
+        buffer.append(" (");
         buffer.append(this.getWeatherDescription());
+        buffer.append(")");
         buffer.append("\n");
-        buffer.append("Icon: ");
-        buffer.append(this.getWeatherIconUrl());
-        buffer.append("\n");
-        buffer.append("Precipication: ");
+        buffer.append("Precip: ");
         buffer.append(this.getPrecipitation());
+        buffer.append("MM");
         buffer.append("\n");
 
+        for(DailyWeather daily: _dailyWeathers) {
+            appendDailyWeatherDebugString(buffer, daily);
+        }
+
         return buffer.toString();
+    }
+
+    private void appendDailyWeatherDebugString(StringBuffer buffer, DailyWeather dailyWeather) {
+        buffer.append(dailyWeather.getDate());
+        buffer.append("\n");
+        buffer.append(dailyWeather.getTempMinF());
+        buffer.append("-");
+        buffer.append(dailyWeather.getTempMaxF());
+        buffer.append("F");
+        buffer.append(" (");
+        buffer.append(dailyWeather.getWeatherDescription());
+        buffer.append(")");
+        buffer.append("\n");
+        buffer.append("Precip: ");
+        buffer.append(dailyWeather.getPrecipitation());
+        buffer.append("MM");
+        buffer.append("\n");
     }
 }

@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
         try {
             String zipCodeString = zipCode.toString();
             Log.v(TAG, zipCodeString);
-            new FetchCurrentWeatherTask().execute(zipCodeString);
+            new FetchWeatherTask().execute(zipCodeString);
         } catch (Exception e)
         {
             _viewCurrentWeather.setText("Failed to fetch current weather: " + e.getMessage());
@@ -77,16 +77,16 @@ public class MainActivity extends Activity {
         toast.show();
     }
 
-    class FetchCurrentWeatherTask extends AsyncTask<String, Integer, Weather> {
+    class FetchWeatherTask extends AsyncTask<String, Integer, Weather> {
 
         @Override
         protected Weather doInBackground(String... arguments) {
             String zipCode = arguments[0];
             IWeatherService weatherService = new WeatherService();
-            Weather currentWeather = null;
+            Weather weather = null;
             try {
-                currentWeather = weatherService.fetchCurrentWeather(zipCode);
-                return currentWeather;
+                weather = weatherService.fetchWeather(zipCode);
+                return weather;
             } catch (Exception e) {
                 // TODO improve error handling
                 return null;
@@ -96,12 +96,12 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Weather weather) {
             if (weather != null) {
-                MainActivity.this.displayCurrentWeather(weather);
+                MainActivity.this.displayWeather(weather);
             }
         }
     }
 
-    private void displayCurrentWeather(Weather weather) {
+    private void displayWeather(Weather weather) {
         Log.v(TAG, weather.toDebugString());
         _viewCurrentWeather.setText(weather.toDebugString());
         new FetchImageTask().execute(weather.getWeatherIconUrl());
