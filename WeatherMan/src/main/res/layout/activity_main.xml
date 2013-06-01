@@ -26,4 +26,18 @@
             android:id="@+id/button_display_current_weather"
             android:layout_gravity="left|center_vertical"/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content">
+
+        <include layout="@layout/daily_weather_row_layout"/>
+    </LinearLayout>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Display 5-day Weather"
+            android:id="@+id/button_display_5day_weather"
+            android:layout_gravity="left|center_vertical"/>
 </LinearLayout>

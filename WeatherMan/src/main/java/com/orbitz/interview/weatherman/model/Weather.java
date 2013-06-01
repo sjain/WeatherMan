@@ -56,10 +56,6 @@ public class Weather {
         buffer.append("MM");
         buffer.append("\n");
 
-        for(DailyWeather daily: _dailyWeathers) {
-            buffer.append(daily.toDebugString());
-        }
-
         return buffer.toString();
     }
 }
