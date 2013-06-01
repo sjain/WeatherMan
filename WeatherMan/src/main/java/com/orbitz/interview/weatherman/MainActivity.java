@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
         CharSequence zipCode = _textZipCode.getText();
         if (zipCode.length() != 5)
         {
+            _viewCurrentWeather.setText(""); // clear the previous weather information
             String message = "Please enter 5-digit zip code.";
             showError(message);
             return;
@@ -89,6 +90,7 @@ public class MainActivity extends Activity {
     }
 
     private void displayCurrentWeather(Weather weather) {
-        _viewCurrentWeather.setText("Current Temperature (F): " + weather.getTempF());
+        Log.v(TAG, weather.toDebugString());
+        _viewCurrentWeather.setText(weather.toDebugString());
     }
 }

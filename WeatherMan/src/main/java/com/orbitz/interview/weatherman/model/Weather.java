@@ -48,4 +48,22 @@ public class Weather {
     public void setPrecipitation(double _precipitation) {
         this._precipitation = _precipitation;
     }
+
+    public String toDebugString() {
+        StringBuffer buffer = new StringBuffer(100);
+        buffer.append("Temperature(F): ");
+        buffer.append(this.getTempF());
+        buffer.append("\n");
+        buffer.append("Description: ");
+        buffer.append(this.getWeatherDescription());
+        buffer.append("\n");
+        buffer.append("Icon: ");
+        buffer.append(this.getWeatherIconUrl());
+        buffer.append("\n");
+        buffer.append("Precipication: ");
+        buffer.append(this.getPrecipitation());
+        buffer.append("\n");
+
+        return buffer.toString();
+    }
 }
