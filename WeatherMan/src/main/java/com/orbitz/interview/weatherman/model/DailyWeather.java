@@ -43,4 +43,24 @@ public class DailyWeather {
     public double getPrecipitation() {
         return _precipitation;
     }
+
+    public String toDebugString() {
+        StringBuffer buffer = new StringBuffer(100);
+        buffer.append(this.getDate());
+        buffer.append("\n");
+        buffer.append(this.getTempMinF());
+        buffer.append("-");
+        buffer.append(this.getTempMaxF());
+        buffer.append("F");
+        buffer.append(" (");
+        buffer.append(this.getWeatherDescription());
+        buffer.append(")");
+        buffer.append("\n");
+        buffer.append("Precip: ");
+        buffer.append(this.getPrecipitation());
+        buffer.append("MM");
+        buffer.append("\n");
+
+        return buffer.toString();
+    }
 }

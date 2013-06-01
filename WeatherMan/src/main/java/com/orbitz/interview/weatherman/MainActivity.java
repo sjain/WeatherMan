@@ -2,9 +2,11 @@ package com.orbitz.interview.weatherman;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,44 +32,35 @@ public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private EditText _textZipCode = null;
-    private TextView _viewCurrentWeather = null;
-    private ImageView _imageCurrentWeather = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         _textZipCode = (EditText) findViewById(R.id.text_zip_code);
         Button buttonDisplayCurrentWeather = (Button) findViewById(R.id.button_display_current_weather);
-        _imageCurrentWeather = (ImageView) findViewById(R.id.image_current_weather);
 
         buttonDisplayCurrentWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.this.fetchCurrentWeather();
+                MainActivity.this.displayLocalWeather();
             }
         });
-        _viewCurrentWeather = (TextView) findViewById(R.id.view_current_weather);
     }
 
-    private void fetchCurrentWeather() {
+    private void displayLocalWeather() {
         CharSequence zipCode = _textZipCode.getText();
         if (zipCode.length() != 5)
         {
-            _viewCurrentWeather.setText(""); // clear the previous weather information
-            _imageCurrentWeather.setVisibility(View.INVISIBLE);
             String message = "Please enter a 5-digit zip-code.";
             showError(message);
             return;
         }
 
-        try {
-            String zipCodeString = zipCode.toString();
-            Log.v(TAG, zipCodeString);
-            new FetchWeatherTask().execute(zipCodeString);
-        } catch (Exception e)
-        {
-            _viewCurrentWeather.setText("Failed to fetch current weather: " + e.getMessage());
-        }
+        String zipCodeString = zipCode.toString();
+        Log.v(TAG, zipCodeString);
+        Intent intent = new Intent(getBaseContext(), DailyWeatherListActivity.class);
+        intent.putExtra("ZIPCODE", zipCodeString);
+        startActivity(intent);
     }
 
     private void showError(String message) {
@@ -77,64 +70,36 @@ public class MainActivity extends Activity {
         toast.show();
     }
 
-    class FetchWeatherTask extends AsyncTask<String, Integer, Weather> {
-
-        @Override
-        protected Weather doInBackground(String... arguments) {
-            String zipCode = arguments[0];
-            IWeatherService weatherService = new WeatherService();
-            Weather weather = null;
-            try {
-                weather = weatherService.fetchWeather(zipCode);
-                return weather;
-            } catch (Exception e) {
-                // TODO improve error handling
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Weather weather) {
-            if (weather != null) {
-                MainActivity.this.displayWeather(weather);
-            }
-        }
-    }
-
-    private void displayWeather(Weather weather) {
-        Log.v(TAG, weather.toDebugString());
-        _viewCurrentWeather.setText(weather.toDebugString());
-        new FetchImageTask().execute(weather.getWeatherIconUrl());
-    }
-
-    class FetchImageTask extends AsyncTask<String, Integer, Drawable> {
-
-        @Override
-        protected Drawable doInBackground(String... arguments) {
-            String url = arguments[0];
-            try {
-                InputStream is = (InputStream) new URL(url).getContent();
-                Drawable d = Drawable.createFromStream(is, "src");
-                return d;
-            } catch (MalformedURLException e) {
-                // TODO improve error handling
-                return null;
-            } catch (IOException e) {
-                // TODO improve error handling
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            if (drawable != null) {
-                MainActivity.this.displayCurrentWeatherImage(drawable);
-            }
-        }
-    }
-
-    private void displayCurrentWeatherImage(Drawable drawable) {
-        _imageCurrentWeather.setVisibility(View.VISIBLE);
-        _imageCurrentWeather.setImageDrawable(drawable);
-    }
+//    class FetchImageTask extends AsyncTask<String, Integer, Drawable> {
+//
+//        @Override
+//        protected Drawable doInBackground(String... arguments) {
+//            String url = arguments[0];
+//            try {
+//                InputStream is = (InputStream) new URL(url).getContent();
+//                Drawable d = Drawable.createFromStream(is, "src");
+//                return d;
+//            } catch (MalformedURLException e) {
+//                // TODO improve error handling
+//                Log.e(TAG, "failed to fetch image", e);
+//                return null;
+//            } catch (IOException e) {
+//                // TODO improve error handling
+//                Log.e(TAG, "failed to fetch image", e);
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Drawable drawable) {
+//            if (drawable != null) {
+//                MainActivity.this.displayCurrentWeatherImage(drawable);
+//            }
+//        }
+//    }
+//
+//    private void displayCurrentWeatherImage(Drawable drawable) {
+////        _imageCurrentWeather.setVisibility(View.VISIBLE);
+////        _imageCurrentWeather.setImageDrawable(drawable);
+//    }
 }

@@ -57,26 +57,9 @@ public class Weather {
         buffer.append("\n");
 
         for(DailyWeather daily: _dailyWeathers) {
-            appendDailyWeatherDebugString(buffer, daily);
+            buffer.append(daily.toDebugString());
         }
 
         return buffer.toString();
-    }
-
-    private void appendDailyWeatherDebugString(StringBuffer buffer, DailyWeather dailyWeather) {
-        buffer.append(dailyWeather.getDate());
-        buffer.append("\n");
-        buffer.append(dailyWeather.getTempMinF());
-        buffer.append("-");
-        buffer.append(dailyWeather.getTempMaxF());
-        buffer.append("F");
-        buffer.append(" (");
-        buffer.append(dailyWeather.getWeatherDescription());
-        buffer.append(")");
-        buffer.append("\n");
-        buffer.append("Precip: ");
-        buffer.append(dailyWeather.getPrecipitation());
-        buffer.append("MM");
-        buffer.append("\n");
     }
 }

@@ -26,18 +26,4 @@
             android:id="@+id/button_display_current_weather"
             android:layout_gravity="left|center_vertical"/>
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/view_current_weather"
-            android:layout_gravity="left|center_vertical"/>
-
-    <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_current_weather"
-            android:layout_gravity="center"/>
-
-
 </LinearLayout>
