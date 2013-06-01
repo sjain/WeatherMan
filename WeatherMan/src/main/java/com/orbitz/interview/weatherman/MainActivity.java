@@ -2,18 +2,25 @@ package com.orbitz.interview.weatherman;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orbitz.interview.weatherman.model.Weather;
 import com.orbitz.interview.weatherman.service.IWeatherService;
 import com.orbitz.interview.weatherman.service.WeatherService;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by sjain on 5/31/13.
@@ -24,12 +31,15 @@ public class MainActivity extends Activity {
 
     private EditText _textZipCode = null;
     private TextView _viewCurrentWeather = null;
+    private ImageView _imageCurrentWeather = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         _textZipCode = (EditText) findViewById(R.id.text_zip_code);
         Button buttonDisplayCurrentWeather = (Button) findViewById(R.id.button_display_current_weather);
+        _imageCurrentWeather = (ImageView) findViewById(R.id.image_current_weather);
+
         buttonDisplayCurrentWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,5 +102,34 @@ public class MainActivity extends Activity {
     private void displayCurrentWeather(Weather weather) {
         Log.v(TAG, weather.toDebugString());
         _viewCurrentWeather.setText(weather.toDebugString());
+        new FetchImageTask().execute(weather.getWeatherIconUrl());
+    }
+
+    class FetchImageTask extends AsyncTask<String, Integer, Drawable> {
+
+        @Override
+        protected Drawable doInBackground(String... arguments) {
+            String url = arguments[0];
+            try {
+                InputStream is = (InputStream) new URL(url).getContent();;
+                Drawable d = Drawable.createFromStream(is, "src");
+                return d;
+            } catch (MalformedURLException e) {
+                return null;
+            } catch (IOException e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            if (drawable != null) {
+                MainActivity.this.displayCurrentWeatherImage(drawable);
+            }
+        }
+    }
+
+    private void displayCurrentWeatherImage(Drawable drawable) {
+        _imageCurrentWeather.setImageDrawable(drawable);
     }
 }
